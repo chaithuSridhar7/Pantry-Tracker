@@ -46,7 +46,7 @@ PantryTracker
 ├── backend
 │   ├── server.js
 │   ├── package.json
-│   └── .env
+│   └── tests
 │
 └── README.md
 ```
@@ -70,7 +70,7 @@ node server.js
 The backend runs on:
 
 ```
-http://localhost:5000
+https://pantry-tracker-api-aahe.onrender.com
 ```
 
 ### Frontend
