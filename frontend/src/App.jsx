@@ -20,7 +20,7 @@ const [form,setForm]=useState({
 
 function loadItems(){
 
-fetch("http://localhost:5000/items")
+fetch(`${import.meta.env.VITE_API_URL}/items`)
 .then(res=>res.json())
 .then(data=>setItems(data));
 
@@ -38,7 +38,7 @@ function addItem(e){
 e.preventDefault();
 
 
-fetch("http://localhost:5000/items",
+fetch(`${import.meta.env.VITE_API_URL}/items`,
 {
 method:"POST",
 headers:{
@@ -83,7 +83,7 @@ e.preventDefault();
 
 
 fetch(
-`http://localhost:5000/items/${editingId}`,
+`${import.meta.env.VITE_API_URL}/items/${editingId}`,
 {
 method:"PUT",
 
@@ -117,7 +117,7 @@ owner:""
 function deleteItem(id){
 
 fetch(
-`http://localhost:5000/items/${id}`,
+`${import.meta.env.VITE_API_URL}/items/${id}`,
 {
 method:"DELETE"
 }
