@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
+const path = require("path");
 require("dotenv").config();
 
 // create the express app
@@ -18,17 +19,17 @@ const pool = new Pool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: process.env.NODE_ENV === "production"
+        ? { rejectUnauthorized: false }
+        : false
 });
 
 //Port number
 const PORT = process.env.PORT || 5000;
 //Test
-app.get("/", (req, res) => {
-    res.json({ message: "Pantry API is running!" });
-});
+// app.get("/", (req, res) => {
+//     res.json({ message: "Pantry API is running!" });
+// });
 
 //get all pantry items
 app.get("/items", async (req, res) => {
@@ -88,13 +89,12 @@ app.put("/items/:id", async(req,res)=>{
     try {
         const result = await pool.query(
             `UPDATE items
-            SET name=$1,
-                brand=$2,
-                purchase_date=$3,
-                expiration_date=$4,
-                location=$5,
-                owner=$6
-            WHERE id=$7
+            SET brand=$1,
+                purchase_date=$2,
+                expiration_date=$3,
+                location=$4,
+                owner=$5
+            WHERE id=$6
             RETURNING *`,
             [
                 brand,
@@ -106,7 +106,7 @@ app.put("/items/:id", async(req,res)=>{
             ]
         );
 
-        res.jason(result.rows[0]);
+        res.json(result.rows[0]);
     } catch(error){
         console.log(error);
         res.status(500).json({
@@ -137,8 +137,10 @@ app.delete("/items/:id", async(req,res)=>{
     }
 });
 
+//app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
 if (require.main === module) {
-  app.listen(PORT, () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
